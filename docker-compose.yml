@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  opensecai-blogs:
+    image: opensecai-blogs
+    container_name: opensecai-blogs
+    ports:
+      - "6903:3000"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./data:/app/data  # Example volume; adjust paths as needed
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

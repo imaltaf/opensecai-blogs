@@ -22,7 +22,7 @@ const ProjectCard = ({ title, description, imgSrc, href, tools, deployed }) => (
     </div>
 
     <div className="flex flex-col justify-start gap-3">
-      <h1 className="font-bold capitalize text-neutral-200">{title}</h1>
+      <h1 className="font-bold capitalize text-3d">{title}</h1>
       <p className="truncate-2 text-sm text-neutral-400">{description}</p>
 
       <div className="flex flex-wrap items-center gap-1">
@@ -63,6 +63,12 @@ const ProjectCard = ({ title, description, imgSrc, href, tools, deployed }) => (
         )}
       </div>
     </div>
+    <style jsx>{`
+      .text-3d {
+        color: #white; /* Dark gray color */
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2); /* Creating a 3D effect with a slight shadow */
+      }
+    `}</style>
   </div>
 )
 
