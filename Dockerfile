@@ -1,20 +1,38 @@
-# Step 1: Use an official Node.js base image that allows custom versions
-FROM node:20-slim
+# Use an official Node.js runtime as a parent image
+FROM node:18-alpine AS builder
 
-# Step 2: Set the working directory inside the container
-WORKDIR /usr/src/app
+# Set the working directory
+WORKDIR /app
 
-# Step 3: Copy package files to the container
-COPY package*.json ./
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
 
-# Step 4: Install project dependencies
+# Install dependencies
 RUN npm install
 
-# Step 5: Copy the rest of the project files to the container
+# Copy the rest of the application
 COPY . .
 
-# Step 6: Expose the port that your app runs on
+# Build the Next.js application
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine AS runner
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the built application from the builder stage
+COPY --from=builder /app/package.json /app/package-lock.json ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
+
+# Install only production dependencies
+RUN npm install --only=production
+
+# Expose the port the app runs on
 EXPOSE 3000
 
-# Step 7: Command to run the development server
-CMD ["npm", "run", "dev"]
+# Start the Next.js application
+CMD ["npm", "start"]
